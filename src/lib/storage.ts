@@ -120,3 +120,34 @@ export const getMasterItems = async (): Promise<MasterItem[]> => {
     gstRate: row.gst_rate
   }));
 };
+
+export const addCustomer = async (customer: Omit<Customer, 'id'>): Promise<void> => {
+  const { error } = await supabase.from('customers').insert({
+    name: customer.name,
+    address: customer.address,
+    state: customer.state,
+    state_code: customer.stateCode,
+    gstin: customer.gstin
+  });
+  if (error) throw error;
+};
+
+export const deleteCustomer = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('customers').delete().eq('id', id);
+  if (error) throw error;
+};
+
+export const addMasterItem = async (item: Omit<MasterItem, 'id'>): Promise<void> => {
+  const { error } = await supabase.from('items').insert({
+    description: item.description,
+    hsn_code: item.hsnCode,
+    unit: item.unit,
+    gst_rate: item.gstRate
+  });
+  if (error) throw error;
+};
+
+export const deleteMasterItem = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('items').delete().eq('id', id);
+  if (error) throw error;
+};

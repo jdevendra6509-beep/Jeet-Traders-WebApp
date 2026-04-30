@@ -4,21 +4,23 @@ import { InvoiceForm } from './components/InvoiceForm';
 import { InvoicePreview } from './components/InvoicePreview';
 import { Dashboard } from './views/Dashboard';
 import { Reports } from './views/Reports';
+import { Customers } from './views/Customers';
+import { Items } from './views/Items';
 import type { InvoiceData } from './types';
 import { saveInvoice, getInvoiceByNo } from './lib/storage';
-import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle } from 'lucide-react';
+import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle, Users, Package } from 'lucide-react';
 
 function Sidebar() {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="sidebar no-print" style={{ width: '250px', backgroundColor: 'var(--surface)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--primary)', borderBottom: '1px solid var(--border-color)' }}>
+    <div className="sidebar no-print">
+      <div className="sidebar-header">
         <Receipt size={28} />
         <span>Billing App</span>
       </div>
-      <nav style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <nav className="sidebar-nav">
         <Link to="/" className={`btn ${isActive('/') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/') ? '' : 'transparent' }}>
           <LayoutDashboard size={18} /> Dashboard
         </Link>
@@ -27,6 +29,12 @@ function Sidebar() {
         </Link>
         <Link to="/reports" className={`btn ${isActive('/reports') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/reports') ? '' : 'transparent' }}>
           <FileSpreadsheet size={18} /> Reports
+        </Link>
+        <Link to="/customers" className={`btn ${isActive('/customers') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/customers') ? '' : 'transparent' }}>
+          <Users size={18} /> Customers
+        </Link>
+        <Link to="/items" className={`btn ${isActive('/items') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/items') ? '' : 'transparent' }}>
+          <Package size={18} /> Items
         </Link>
       </nav>
     </div>
@@ -110,13 +118,15 @@ function PreviewWrapper() {
 function App() {
   return (
     <BrowserRouter>
-      <div className="app-container" style={{ flexDirection: 'row', height: '100vh', overflow: 'hidden' }}>
+      <div className="app-container">
         <Sidebar />
-        <main className="main-content" style={{ overflowY: 'auto', height: '100vh' }}>
+        <main className="main-content" style={{ overflowY: 'auto' }}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/new" element={<NewInvoiceWrapper />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/items" element={<Items />} />
             <Route path="/preview/:invoiceNo" element={<PreviewWrapper />} />
           </Routes>
         </main>

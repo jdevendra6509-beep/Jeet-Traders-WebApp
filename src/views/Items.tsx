@@ -1,0 +1,156 @@
+import { useEffect, useState } from 'react';
+import { getMasterItems, addMasterItem, deleteMasterItem } from '../lib/storage';
+import type { MasterItem } from '../types';
+import { Trash2, Plus } from 'lucide-react';
+
+export function Items() {
+  const [items, setItems] = useState<MasterItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    description: '',
+    hsnCode: '',
+    unit: 'Kgs',
+    gstRate: 5
+  });
+
+  const fetchItems = async () => {
+    setLoading(true);
+    try {
+      const data = await getMasterItems();
+      setItems(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ 
+      ...formData, 
+      [name]: name === 'gstRate' ? Number(value) : value 
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await addMasterItem(formData);
+      setFormData({ description: '', hsnCode: '', unit: 'Kgs', gstRate: 5 });
+      fetchItems();
+    } catch (error) {
+      alert('Failed to add item');
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this item?')) {
+      try {
+        await deleteMasterItem(id);
+        fetchItems();
+      } catch (error) {
+        alert('Failed to delete item');
+        console.error(error);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <div className="header mb-4" style={{ position: 'relative', border: 'none', padding: 0, backgroundColor: 'transparent', boxShadow: 'none' }}>
+        <h1 className="header-title">Item Master</h1>
+      </div>
+
+      <div className="card mb-4">
+        <div className="card-header">
+          <h2 style={{ fontSize: '1.1rem' }}>Add New Item</h2>
+        </div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="form-row">
+              <div className="form-col" style={{ flex: 2 }}>
+                <label className="form-label">Description of Goods</label>
+                <input required type="text" className="form-control" name="description" value={formData.description} onChange={handleChange} />
+              </div>
+              <div className="form-col">
+                <label className="form-label">HSN Code</label>
+                <input required type="text" className="form-control" name="hsnCode" value={formData.hsnCode} onChange={handleChange} />
+              </div>
+            </div>
+            <div className="form-row mt-4">
+              <div className="form-col">
+                <label className="form-label">Unit</label>
+                <select className="form-control" name="unit" value={formData.unit} onChange={handleChange}>
+                  <option value="Kgs">Kgs</option>
+                  <option value="Ltr">Ltr</option>
+                  <option value="Pcs">Pcs</option>
+                  <option value="Box">Box</option>
+                </select>
+              </div>
+              <div className="form-col">
+                <label className="form-label">GST Rate (%)</label>
+                <input required type="number" step="0.01" className="form-control" name="gstRate" value={formData.gstRate} onChange={handleChange} />
+              </div>
+            </div>
+            <div className="mt-4">
+              <button type="submit" className="btn btn-primary">
+                <Plus size={16} /> Add Item
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <h2 style={{ fontSize: '1.1rem' }}>Existing Items</h2>
+        </div>
+        <div className="card-body" style={{ padding: 0 }}>
+          {loading ? (
+            <p style={{ padding: '1.5rem' }}>Loading...</p>
+          ) : (
+            <div className="table-container" style={{ margin: 0, border: 'none', borderRadius: 0 }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>HSN Code</th>
+                    <th>Unit</th>
+                    <th>GST %</th>
+                    <th style={{ width: '50px' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map(i => (
+                    <tr key={i.id}>
+                      <td style={{ fontWeight: 500 }}>{i.description}</td>
+                      <td>{i.hsnCode}</td>
+                      <td>{i.unit}</td>
+                      <td>{i.gstRate}%</td>
+                      <td>
+                        <button className="btn btn-icon btn-danger" onClick={() => handleDelete(i.id)}>
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {items.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="text-center text-muted">No items found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
