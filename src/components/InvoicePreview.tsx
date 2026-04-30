@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import type { InvoiceData } from '../types';
 import { numberToWords } from '../lib/numberToWords';
 import { ArrowLeft, Printer, Share2, Download } from 'lucide-react';

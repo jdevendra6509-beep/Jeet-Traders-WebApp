@@ -7,7 +7,6 @@ import { Reports } from './views/Reports';
 import type { InvoiceData } from './types';
 import { saveInvoice, getInvoiceByNo } from './lib/storage';
 import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
 
 function Sidebar() {
   const location = useLocation();
@@ -36,7 +35,6 @@ function Sidebar() {
 
 function NewInvoiceWrapper() {
   const navigate = useNavigate();
-  const today = new Date().toISOString().split('T')[0];
   const formattedToday = `${new Date().getDate().toString().padStart(2, '0')}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getFullYear()}`;
 
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({

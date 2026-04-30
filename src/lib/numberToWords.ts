@@ -15,11 +15,11 @@ export function numberToWords(num: number): string {
         str += a[Number(n[i] + n[i + 1])] + ' ';
         i++;
         sk = 1;
-      } else if (n[i] != 0) {
+      } else if (n[i] !== '0') {
         str += b[n[i] as any] + ' ';
         sk = 1;
       }
-    } else if (n[i] != 0) {
+    } else if (n[i] !== '0') {
       str += a[n[i] as any] + ' ';
       if ((x - i) % 3 == 0) str += 'Hundred ';
       sk = 1;
