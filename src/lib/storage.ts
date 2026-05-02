@@ -2,6 +2,12 @@ import type { InvoiceData, Customer, MasterItem } from '../types';
 import { supabase } from './supabase';
 
 export const saveInvoice = async (invoice: InvoiceData): Promise<void> => {
+  const sanitizedItems = invoice.items.map(item => ({
+    ...item,
+    qty: Number(item.qty) || 0,
+    inclusiveRate: Number(item.inclusiveRate) || 0
+  }));
+
   const { error } = await supabase.from('invoices').upsert({
     invoice_no: invoice.invoiceNo,
     date_of_supply: invoice.dateOfSupply,
@@ -17,11 +23,11 @@ export const saveInvoice = async (invoice: InvoiceData): Promise<void> => {
     receiver_state: invoice.receiverState,
     receiver_state_code: invoice.receiverStateCode,
     receiver_gstin: invoice.receiverGstin,
-    loading_charges: invoice.loadingCharges,
-    transport_charges: invoice.transportCharges,
-    other_charges: invoice.otherCharges,
-    hamali: invoice.hamali,
-    items_json: invoice.items
+    loading_charges: Number(invoice.loadingCharges) || 0,
+    transport_charges: Number(invoice.transportCharges) || 0,
+    other_charges: Number(invoice.otherCharges) || 0,
+    hamali: Number(invoice.hamali) || 0,
+    items_json: sanitizedItems
   });
   
   if (error) {
