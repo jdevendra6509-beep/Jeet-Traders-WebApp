@@ -217,6 +217,7 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
           Save & Generate Invoice
         </button>
       </div>
+      <div style={{ height: '80px' }} className="print-hidden"></div>
     </div>
   );
 }

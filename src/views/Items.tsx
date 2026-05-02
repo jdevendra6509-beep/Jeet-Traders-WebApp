@@ -151,6 +151,7 @@ export function Items() {
           )}
         </div>
       </div>
+      <div style={{ height: '80px' }} className="print-hidden"></div>
     </div>
   );
 }

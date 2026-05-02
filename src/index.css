@@ -348,6 +348,64 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: none;
 }
 
+/* Metric Cards */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-card-title {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-card-value {
+  color: var(--text-main);
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.metric-card-icon {
+  margin-bottom: 1rem;
+  color: var(--primary);
+  background-color: #E0E7FF;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .metric-card {
+    padding: 1rem;
+  }
+  .metric-card-value {
+    font-size: 1.25rem;
+  }
+}
+
 /* Premium Dashboard Invoice Grid */
 .invoice-grid {
   display: grid;
