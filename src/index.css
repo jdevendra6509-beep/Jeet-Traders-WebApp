@@ -575,12 +575,22 @@ input:checked + .slider:before {
 .invoice-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 12px;
 }
 
-.invoice-table th, .invoice-table td {
-  border: 1px solid black;
-  padding: 4px 8px;
-  font-size: 12px;
+.invoice-table th {
+  background-color: #F4F5F9;
+  color: #1C1C28;
+  font-weight: 600;
+  padding: 10px 8px;
+  border-bottom: 2px solid #E4E4EB;
+}
+
+.invoice-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #E4E4EB;
+  color: #333;
+  vertical-align: middle;
 }
 
 .invoice-header-text {

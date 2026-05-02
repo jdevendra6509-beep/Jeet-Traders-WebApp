@@ -132,65 +132,67 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
         </div>
       </div>
 
-      <div className="invoice-print-container" ref={printRef} style={{ padding: '20px', backgroundColor: 'white' }}>
-        <div style={{ border: '2px solid black', padding: '0px' }}>
-          {/* Header */}
-          <div style={{ textAlign: 'center', borderBottom: '1px solid black', padding: '4px' }}>
-            <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>JEET TRADERS</h1>
-          </div>
-          
-          <div className="flex-row" style={{ borderBottom: '1px solid black' }}>
-            <div style={{ width: '15%', padding: '4px 8px', fontWeight: 'bold', borderRight: '1px solid black' }}>Reg office :</div>
-            <div style={{ width: '85%', padding: '4px 8px' }}>
-              13, Gangaghat, Shivaji Market, Amalner, PIN - 425401, Maharashtra
+      <div style={{ overflowX: 'auto', paddingBottom: '20px' }}>
+        <div className="invoice-print-container" ref={printRef} style={{ padding: '20px', backgroundColor: 'white', minWidth: '800px' }}>
+          {/* Header Row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
+            <div>
+              <h1 style={{ margin: 0, fontSize: '28px', fontWeight: '800', color: 'var(--primary)', letterSpacing: '-0.5px' }}>JEET TRADERS</h1>
+              <div style={{ marginTop: '8px', fontSize: '12px', color: '#666', lineHeight: '1.5' }}>
+                13, Gangaghat, Shivaji Market,<br />
+                Amalner, PIN - 425401, Maharashtra<br />
+                <strong>GSTIN:</strong> 27ASXPJ0869M1ZS
+              </div>
             </div>
-          </div>
-          
-          <div style={{ textAlign: 'center', borderBottom: '1px solid black', padding: '4px', fontWeight: 'bold', fontSize: '16px' }}>
-            GSTIN: 27ASXPJ0869M1ZS
-          </div>
-          
-          <div style={{ textAlign: 'center', borderBottom: '1px solid black', padding: '4px', fontWeight: 'bold', fontSize: '18px' }}>
-            TAX INVOICE
-          </div>
-
-          {/* Details Row 1 */}
-          <div className="flex-row" style={{ borderBottom: '1px solid black' }}>
-            <div style={{ width: '100%', padding: '4px 8px' }}>
-              <div className="flex-row justify-between"><span>Invoice No. : <b>{data.invoiceNo}</b></span> <span>Date of Supply : {data.dateOfSupply}</span></div>
-              <div className="flex-row justify-between"><span>P.O No.: {data.poNo}</span> <span>P.O Date : {data.poDate}</span></div>
-              <div className="flex-row justify-between"><span>Vehicle No: {data.vehicleNo}</span> <span>Name of Transport : {data.nameOfTransport}</span></div>
-              <div className="flex-row justify-between"><span>Place OF Supply : {data.placeOfSupply}</span> <span>Mode of Transport : {data.modeOfTransport}</span></div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ display: 'inline-block', padding: '6px 12px', backgroundColor: '#E0E7FF', color: '#3730A3', borderRadius: '4px', fontWeight: '700', fontSize: '14px', marginBottom: '12px', letterSpacing: '1px' }}>
+                TAX INVOICE
+              </div>
+              <div style={{ fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div><span style={{ color: '#666' }}>Invoice No:</span> <strong style={{ color: '#1C1C28' }}>{data.invoiceNo}</strong></div>
+                <div><span style={{ color: '#666' }}>Date:</span> <strong style={{ color: '#1C1C28' }}>{data.dateOfSupply}</strong></div>
+              </div>
             </div>
           </div>
 
-          {/* Receiver / Consignee */}
-          <div className="flex-row" style={{ borderBottom: '1px solid black' }}>
-            <div style={{ width: '100%', padding: '4px 8px' }}>
-              <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Details of Receiver (Billed to) :</div>
-              <div><b>Name: {data.receiverName}</b></div>
-              <div>Address: {data.receiverAddress}</div>
-              <div>State: {data.receiverState}</div>
-              <div>State Code: {data.receiverStateCode}</div>
-              <div style={{ fontWeight: 'bold' }}>GSTIN : {data.receiverGstin}</div>
+          {/* Info Blocks */}
+          <div style={{ display: 'flex', gap: '20px', marginBottom: '40px' }}>
+            {/* Billed To */}
+            <div style={{ flex: 1, backgroundColor: '#F8F9FA', padding: '20px', borderRadius: '8px', border: '1px solid #E4E4EB' }}>
+              <h3 style={{ margin: '0 0 12px 0', fontSize: '12px', textTransform: 'uppercase', color: '#8F90A6', letterSpacing: '1px' }}>Billed To</h3>
+              <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '4px', color: '#1C1C28' }}>{data.receiverName}</div>
+              <div style={{ fontSize: '12px', color: '#444', lineHeight: '1.5' }}>
+                {data.receiverAddress}<br />
+                {data.receiverState} ({data.receiverStateCode})<br />
+                <div style={{ marginTop: '8px' }}><strong>GSTIN:</strong> {data.receiverGstin}</div>
+              </div>
+            </div>
+
+            {/* Transport Details */}
+            <div style={{ flex: 1, backgroundColor: '#F8F9FA', padding: '20px', borderRadius: '8px', border: '1px solid #E4E4EB' }}>
+              <h3 style={{ margin: '0 0 12px 0', fontSize: '12px', textTransform: 'uppercase', color: '#8F90A6', letterSpacing: '1px' }}>Transport & Delivery</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '12px', color: '#444' }}>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>P.O. Number</span><strong style={{ color: '#1C1C28' }}>{data.poNo || '-'}</strong></div>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>P.O. Date</span><strong style={{ color: '#1C1C28' }}>{data.poDate || '-'}</strong></div>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>Vehicle No.</span><strong style={{ color: '#1C1C28' }}>{data.vehicleNo || '-'}</strong></div>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>Transport</span><strong style={{ color: '#1C1C28' }}>{data.nameOfTransport || '-'}</strong></div>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>Place of Supply</span><strong style={{ color: '#1C1C28' }}>{data.placeOfSupply || '-'}</strong></div>
+                <div><span style={{ color: '#8F90A6', display: 'block', fontSize: '10px' }}>Mode</span><strong style={{ color: '#1C1C28' }}>{data.modeOfTransport || '-'}</strong></div>
+              </div>
             </div>
           </div>
 
           {/* Table */}
-          <table className="invoice-table" style={{ border: 'none', borderBottom: '1px solid black' }}>
+          <table className="invoice-table" style={{ marginBottom: '40px' }}>
             <thead>
               <tr>
-                <th style={{ width: '5%' }}>Sr.<br/>No.</th>
-                <th style={{ width: '30%' }}>Description of Goods</th>
-                <th style={{ width: '10%' }}>HSN Code</th>
-                <th style={{ width: '8%' }}>Qty</th>
-                <th style={{ width: '8%' }}>Unit</th>
-                <th style={{ width: '8%' }}>Taxable<br/>Rate</th>
-                <th style={{ width: '10%' }}>Total</th>
-                <th style={{ width: '8%' }}>Loading<br/>Charges</th>
-                <th style={{ width: '8%' }}>Transport<br/>Charges</th>
-                <th style={{ width: '8%' }}>Other<br/>Charges</th>
-                <th style={{ width: '10%' }}>Taxable<br/>Amount</th>
+                <th style={{ width: '5%', textAlign: 'center' }}>#</th>
+                <th style={{ width: '35%' }}>Description of Goods</th>
+                <th style={{ width: '10%', textAlign: 'center' }}>HSN</th>
+                <th style={{ width: '10%', textAlign: 'center' }}>Qty</th>
+                <th style={{ width: '10%', textAlign: 'center' }}>Unit</th>
+                <th style={{ width: '15%', textAlign: 'right' }}>Rate (₹)</th>
+                <th style={{ width: '15%', textAlign: 'right' }}>Total (₹)</th>
               </tr>
             </thead>
             <tbody>
@@ -201,97 +203,101 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
                 const total = taxableRate * qty;
                 
                 return (
-                  <tr key={item.id} style={{ borderBottom: 'none' }}>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none', height: '30px' }}>{index + 1}</td>
-                    <td style={{ borderBottom: 'none', borderTop: 'none' }}>{item.description}</td>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{item.hsnCode}</td>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{qty}</td>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{item.unit}</td>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{taxableRate.toFixed(2)}</td>
-                    <td style={{ textAlign: 'right', borderBottom: 'none', borderTop: 'none' }}>{total.toFixed(2)}</td>
-                    {index === 0 ? (
-                      <>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{loading}</td>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{transport}</td>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{other}</td>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'right', verticalAlign: 'top', paddingTop: '10px' }}>{taxableAmount.toFixed(2)}</td>
-                      </>
-                    ) : null}
+                  <tr key={item.id}>
+                    <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                    <td><strong style={{ display: 'block', color: '#1C1C28' }}>{item.description}</strong><span style={{ fontSize: '10px', color: '#8F90A6' }}>GST: {item.gstRate}%</span></td>
+                    <td style={{ textAlign: 'center' }}>{item.hsnCode}</td>
+                    <td style={{ textAlign: 'center' }}>{qty}</td>
+                    <td style={{ textAlign: 'center' }}>{item.unit}</td>
+                    <td style={{ textAlign: 'right' }}>{taxableRate.toFixed(2)}</td>
+                    <td style={{ textAlign: 'right', fontWeight: '600', color: '#1C1C28' }}>{total.toFixed(2)}</td>
                   </tr>
                 );
               })}
-              <tr style={{ borderTop: '1px solid black' }}>
-                <td colSpan={3} style={{ borderRight: 'none' }}></td>
-                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                  {data.items.reduce((sum, item) => sum + (Number(item.qty) || 0), 0).toFixed(2)}
-                </td>
-                <td colSpan={7} style={{ borderLeft: 'none' }}></td>
-              </tr>
             </tbody>
           </table>
 
-          {/* Totals Section */}
-          <div className="flex-row" style={{ borderBottom: '1px solid black' }}>
-            <div style={{ width: '75%', borderRight: '1px solid black', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ flex: 1, padding: '8px', borderBottom: '1px solid black', textAlign: 'center', fontWeight: 'bold', fontSize: '16px' }}>
-                Terms of Payment : Immediate
+          {/* Bottom Section */}
+          <div style={{ display: 'flex', gap: '40px' }}>
+            {/* Left: Notes & Bank */}
+            <div style={{ flex: 2 }}>
+              <div style={{ marginBottom: '24px' }}>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '12px', textTransform: 'uppercase', color: '#8F90A6', letterSpacing: '1px' }}>Bank Details</h3>
+                <div style={{ fontSize: '12px', color: '#444', lineHeight: '1.6' }}>
+                  <strong>Account Name:</strong> Jeet Traders<br />
+                  <strong>Bank:</strong> Axis Bank, AMALNER<br />
+                  <strong>Account No:</strong> 921020000021696<br />
+                  <strong>IFSC Code:</strong> UTIB0002574
+                </div>
               </div>
-              <div style={{ flex: 1, padding: '8px', fontWeight: 'bold', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Total (In Words) : Rs. {totalInWords}.
+              <div>
+                <h3 style={{ margin: '0 0 8px 0', fontSize: '12px', textTransform: 'uppercase', color: '#8F90A6', letterSpacing: '1px' }}>Terms & Conditions</h3>
+                <div style={{ fontSize: '10px', color: '#666', lineHeight: '1.4' }}>
+                  Certified that the particulars given above are true & correct. Interest will be recovered @ 24% p.a. on overdue unpaid bills. Claims must be raised within 3 days. Goods once sold cannot be returned. Subject to Mumbai Jurisdiction.
+                </div>
               </div>
             </div>
-            <div style={{ width: '25%' }}>
-              <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
-                <span style={{ fontWeight: 'bold' }}>Total Rs.</span>
-                <span>{taxableAmount.toFixed(2)}</span>
+
+            {/* Right: Totals Box */}
+            <div style={{ flex: 1.5 }}>
+              <div style={{ backgroundColor: '#F8F9FA', borderRadius: '8px', padding: '20px', border: '1px solid #E4E4EB' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '13px' }}>
+                  <span style={{ color: '#666' }}>Subtotal</span>
+                  <span style={{ fontWeight: '600', color: '#1C1C28' }}>₹ {taxableAmount.toFixed(2)}</span>
+                </div>
+                {loading > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                    <span style={{ color: '#666' }}>Loading Charges</span>
+                    <span style={{ color: '#1C1C28' }}>₹ {loading.toFixed(2)}</span>
+                  </div>
+                )}
+                {transport > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                    <span style={{ color: '#666' }}>Transport Charges</span>
+                    <span style={{ color: '#1C1C28' }}>₹ {transport.toFixed(2)}</span>
+                  </div>
+                )}
+                {other > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                    <span style={{ color: '#666' }}>Other Charges</span>
+                    <span style={{ color: '#1C1C28' }}>₹ {other.toFixed(2)}</span>
+                  </div>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                  <span style={{ color: '#666' }}>CGST</span>
+                  <span style={{ color: '#1C1C28' }}>₹ {cgst.toFixed(2)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                  <span style={{ color: '#666' }}>SGST</span>
+                  <span style={{ color: '#1C1C28' }}>₹ {sgst.toFixed(2)}</span>
+                </div>
+                {hamali > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                    <span style={{ color: '#666' }}>Hamali</span>
+                    <span style={{ color: '#1C1C28' }}>₹ {hamali.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                <div style={{ borderTop: '1px solid #E4E4EB', margin: '12px 0' }}></div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: '700', fontSize: '16px', color: '#1C1C28' }}>Total</span>
+                  <span style={{ fontWeight: '800', fontSize: '20px', color: 'var(--primary)' }}>₹ {roundedTotal.toFixed(2)}</span>
+                </div>
               </div>
-              <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
-                <span style={{ fontWeight: 'bold' }}>CGST</span>
-                <span></span>
-                <span>{cgst.toFixed(2)}</span>
-              </div>
-              <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
-                <span style={{ fontWeight: 'bold' }}>SGST</span>
-                <span></span>
-                <span>{sgst.toFixed(2)}</span>
-              </div>
-              <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
-                <span style={{ fontWeight: 'bold' }}>HAMALI</span>
-                <span>{hamali.toFixed(2)}</span>
-              </div>
-              <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
-                <span style={{ fontWeight: 'bold' }}>Invoice Total</span>
-                <span>{invoiceTotal.toFixed(2)}</span>
-              </div>
-              <div className="flex-row justify-between" style={{ padding: '4px' }}>
-                <span style={{ fontWeight: 'bold' }}>Rounded Off</span>
-                <span>{roundedTotal.toFixed(2)}</span>
+              <div style={{ marginTop: '12px', fontSize: '11px', color: '#8F90A6', textAlign: 'right', fontStyle: 'italic' }}>
+                Amount in words: Rupees {totalInWords}
               </div>
             </div>
           </div>
 
-          {/* Footer Section */}
-          <div className="flex-row">
-            <div style={{ width: '65%', borderRight: '1px solid black', padding: '4px 8px', fontSize: '11px' }}>
-              <p>Certified that the particulars given above are true & correct and the amount indicated represents the price actually charged and there is no flow of additional consideration directly or indirectly from the buyer.</p>
-              <br/>
-              <p style={{ fontSize: '9px', fontWeight: 'bold' }}>TERMS & CONDITION : Interest will be recovered @ 24% p.a. on overdue unpaid bills, claim of any nature whatsoever will lapse unless raised in writing within 3 days from the date of invoice. Goods once sold cannot be returned and/or exchanged. We reserve to ourselves the right to demand payment of this bill at any time before due date. "SUBJECT TO MUMBAI JURISDICTION."</p>
-            </div>
-            <div style={{ width: '35%', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ padding: '4px 8px', borderBottom: '1px solid black', fontSize: '12px' }}>
-                <div style={{ fontWeight: 'bold' }}>Bank Details :Jeet Traders</div>
-                <div style={{ fontWeight: 'bold' }}>IFSC Code: UTIB0002574</div>
-                <div style={{ fontWeight: 'bold' }}>Account No: 921020000021696</div>
-                <div style={{ fontWeight: 'bold' }}>Bank: Axis Bank,AMALNER</div>
-              </div>
-              <div style={{ padding: '4px 8px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div style={{ fontWeight: 'bold' }}>For,</div>
-                <div style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>JEET TRADERS</div>
-                <div style={{ textAlign: 'right', fontWeight: 'bold', marginTop: '40px' }}>Authorised Signatory</div>
-              </div>
+          {/* Signature */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '60px' }}>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <div style={{ fontWeight: '700', color: '#1C1C28', marginBottom: '40px' }}>For JEET TRADERS</div>
+              <div style={{ borderTop: '1px solid #1C1C28', paddingTop: '8px', fontSize: '12px', color: '#666' }}>Authorised Signatory</div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
