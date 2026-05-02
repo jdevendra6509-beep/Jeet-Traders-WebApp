@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getInvoices, deleteInvoice } from '../lib/storage';
 import type { InvoiceData } from '../types';
-import { FileText, Plus, Trash2, Download } from 'lucide-react';
+import { FileText, Plus, Trash2 } from 'lucide-react';
 
 export function Dashboard() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
@@ -80,37 +80,33 @@ export function Dashboard() {
               <p>No invoices found. Create your first invoice!</p>
             </div>
           ) : (
-            <div className="invoice-list">
+            <div className="invoice-grid">
               {invoices.map((inv) => (
-                <div className="invoice-card" key={inv.invoiceNo}>
+                <div 
+                  className="invoice-card" 
+                  key={inv.invoiceNo} 
+                  onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)}
+                >
                   <div className="invoice-card-header">
-                    <div className="flex items-center" style={{ flex: 1 }}>
-                      <div className="invoice-card-icon">
-                        <FileText size={24} />
-                      </div>
-                      <div className="invoice-card-details">
-                        <div className="invoice-card-title">{inv.receiverName}</div>
-                        <div className="invoice-card-subtitle">{inv.invoiceNo} • {inv.dateOfSupply}</div>
-                      </div>
+                    <div className="invoice-card-icon">
+                      <FileText size={20} />
                     </div>
-                    <div className="invoice-card-badge">
-                      Generated
+                    <div className="invoice-card-menu" onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(inv.invoiceNo);
+                    }} title="Delete Invoice">
+                      <Trash2 size={16} color="var(--danger)" />
                     </div>
                   </div>
                   
+                  <div>
+                    <div className="invoice-card-title">{inv.receiverName}</div>
+                    <div className="invoice-card-subtitle">#{inv.invoiceNo.split('/').pop()}</div>
+                  </div>
+                  
                   <div className="invoice-card-footer">
-                    <div>
-                      <div className="text-muted" style={{ fontSize: '0.75rem' }}>Amount</div>
-                      <div className="invoice-card-amount">₹ {calculateTotal(inv)}</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="btn btn-secondary" onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)} title="View & Download">
-                        <Download size={16} /> View
-                      </button>
-                      <button className="btn btn-danger btn-icon" onClick={() => handleDelete(inv.invoiceNo)} title="Delete Invoice">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                    <div className="invoice-card-date">{inv.dateOfSupply}</div>
+                    <div className="invoice-card-amount">₹{calculateTotal(inv)}</div>
                   </div>
                 </div>
               ))}

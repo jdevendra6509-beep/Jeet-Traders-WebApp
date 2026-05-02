@@ -15,29 +15,53 @@ function Sidebar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="sidebar no-print">
-      <div className="sidebar-header">
-        <Receipt size={28} />
-        <span>Billing App</span>
+    <>
+      <div className="sidebar no-print">
+        <div className="sidebar-header">
+          <Receipt size={28} />
+          <span>Billing App</span>
+        </div>
+        <nav className="sidebar-nav">
+          <Link to="/" className={`btn ${isActive('/') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/') ? '' : 'transparent' }}>
+            <LayoutDashboard size={18} /> Dashboard
+          </Link>
+          <Link to="/new" className={`btn ${isActive('/new') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/new') ? '' : 'transparent' }}>
+            <PlusCircle size={18} /> New Invoice
+          </Link>
+          <Link to="/reports" className={`btn ${isActive('/reports') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/reports') ? '' : 'transparent' }}>
+            <FileSpreadsheet size={18} /> Reports
+          </Link>
+          <Link to="/customers" className={`btn ${isActive('/customers') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/customers') ? '' : 'transparent' }}>
+            <Users size={18} /> Customers
+          </Link>
+          <Link to="/items" className={`btn ${isActive('/items') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/items') ? '' : 'transparent' }}>
+            <Package size={18} /> Items
+          </Link>
+        </nav>
       </div>
-      <nav className="sidebar-nav">
-        <Link to="/" className={`btn ${isActive('/') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/') ? '' : 'transparent' }}>
-          <LayoutDashboard size={18} /> Dashboard
+
+      <nav className="bottom-nav no-print">
+        <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
+          <LayoutDashboard size={24} />
+          <span>Home</span>
         </Link>
-        <Link to="/new" className={`btn ${isActive('/new') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/new') ? '' : 'transparent' }}>
-          <PlusCircle size={18} /> New Invoice
+        <Link to="/customers" className={`nav-item ${isActive('/customers') ? 'active' : ''}`}>
+          <Users size={24} />
+          <span>Clients</span>
         </Link>
-        <Link to="/reports" className={`btn ${isActive('/reports') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/reports') ? '' : 'transparent' }}>
-          <FileSpreadsheet size={18} /> Reports
+        <Link to="/new" className="nav-fab">
+          <PlusCircle size={28} />
         </Link>
-        <Link to="/customers" className={`btn ${isActive('/customers') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/customers') ? '' : 'transparent' }}>
-          <Users size={18} /> Customers
+        <Link to="/items" className={`nav-item ${isActive('/items') ? 'active' : ''}`}>
+          <Package size={24} />
+          <span>Items</span>
         </Link>
-        <Link to="/items" className={`btn ${isActive('/items') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/items') ? '' : 'transparent' }}>
-          <Package size={18} /> Items
+        <Link to="/reports" className={`nav-item ${isActive('/reports') ? 'active' : ''}`}>
+          <FileSpreadsheet size={24} />
+          <span>Reports</span>
         </Link>
       </nav>
-    </div>
+    </>
   );
 }
 

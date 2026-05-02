@@ -100,10 +100,10 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
   return (
     <div className="no-print">
       <div className="card mb-4">
-        <div className="card-header">
-          <h2>Select Customer</h2>
-        </div>
         <div className="card-body form-row">
+          <div style={{ width: '100%', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.2rem', color: 'var(--text-main)' }}>Select Customer</h2>
+          </div>
           <div className="form-col" style={{ flex: '100%' }}>
             <label className="form-label">Customer</label>
             <select className="form-control" name="customerId" value={data.customerId || ''} onChange={handleCustomerChange}>
@@ -125,10 +125,10 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
       </div>
 
       <div className="card mb-4">
-        <div className="card-header">
-          <h2>Invoice Details</h2>
-        </div>
         <div className="card-body form-row">
+          <div style={{ width: '100%', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.2rem', color: 'var(--text-main)' }}>Invoice Details</h2>
+          </div>
           <div className="form-col">
             <label className="form-label">Invoice No.</label>
             <input type="text" className="form-control" name="invoiceNo" value={data.invoiceNo} onChange={handleChange} />
@@ -141,13 +141,13 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
       </div>
 
       <div className="card mb-4">
-        <div className="card-header flex justify-between items-center">
-          <h2>Items (Enter Inclusive Rates)</h2>
-          <button className="btn btn-primary" onClick={addItem}>
-            <Plus size={16} /> Add Item
-          </button>
-        </div>
         <div className="card-body">
+          <div className="flex justify-between items-center mb-4">
+            <h2 style={{ fontSize: '1.2rem', color: 'var(--text-main)' }}>Invoice Items</h2>
+            <button className="btn btn-secondary" style={{ color: 'var(--primary)', border: 'none', backgroundColor: '#E0E7FF' }} onClick={addItem}>
+              <Plus size={16} /> Add Item
+            </button>
+          </div>
           <div className="table-container">
             <table className="table responsive-table">
               <thead>
@@ -201,10 +201,10 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
       </div>
 
       <div className="card mb-4">
-        <div className="card-header">
-          <h2>Hamali Charges</h2>
-        </div>
         <div className="card-body form-row">
+          <div style={{ width: '100%', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.2rem', color: 'var(--text-main)' }}>Additional Charges</h2>
+          </div>
           <div className="form-col">
             <label className="form-label">Hamali (Rs.)</label>
             <input type="number" className="form-control" name="hamali" value={data.hamali} onChange={(e) => onChange({ ...data, hamali: e.target.value === '' ? '' : parseFloat(e.target.value) })} />
