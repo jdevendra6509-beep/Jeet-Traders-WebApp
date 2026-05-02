@@ -80,38 +80,40 @@ export function Dashboard() {
               <p>No invoices found. Create your first invoice!</p>
             </div>
           ) : (
-            <div className="table-container">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Invoice No.</th>
-                    <th>Date</th>
-                    <th>Customer</th>
-                    <th>Total Amount</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoices.map((inv) => (
-                    <tr key={inv.invoiceNo}>
-                      <td>{inv.invoiceNo}</td>
-                      <td>{inv.dateOfSupply}</td>
-                      <td>{inv.receiverName}</td>
-                      <td>₹ {calculateTotal(inv)}</td>
-                      <td>
-                        <div className="flex gap-2">
-                          <button className="btn btn-secondary" onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)} title="View & Download">
-                            <Download size={16} /> View
-                          </button>
-                          <button className="btn btn-danger btn-icon" onClick={() => handleDelete(inv.invoiceNo)} title="Delete Invoice">
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="invoice-list">
+              {invoices.map((inv) => (
+                <div className="invoice-card" key={inv.invoiceNo}>
+                  <div className="invoice-card-header">
+                    <div className="flex items-center" style={{ flex: 1 }}>
+                      <div className="invoice-card-icon">
+                        <FileText size={24} />
+                      </div>
+                      <div className="invoice-card-details">
+                        <div className="invoice-card-title">{inv.receiverName}</div>
+                        <div className="invoice-card-subtitle">{inv.invoiceNo} • {inv.dateOfSupply}</div>
+                      </div>
+                    </div>
+                    <div className="invoice-card-badge">
+                      Generated
+                    </div>
+                  </div>
+                  
+                  <div className="invoice-card-footer">
+                    <div>
+                      <div className="text-muted" style={{ fontSize: '0.75rem' }}>Amount</div>
+                      <div className="invoice-card-amount">₹ {calculateTotal(inv)}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="btn btn-secondary" onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)} title="View & Download">
+                        <Download size={16} /> View
+                      </button>
+                      <button className="btn btn-danger btn-icon" onClick={() => handleDelete(inv.invoiceNo)} title="Delete Invoice">
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

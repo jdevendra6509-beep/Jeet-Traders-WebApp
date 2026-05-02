@@ -116,7 +116,7 @@ export function Items() {
             <p style={{ padding: '1.5rem' }}>Loading...</p>
           ) : (
             <div className="table-container" style={{ margin: 0, border: 'none', borderRadius: 0 }}>
-              <table className="table">
+              <table className="table responsive-table">
                 <thead>
                   <tr>
                     <th>Description</th>
@@ -129,11 +129,11 @@ export function Items() {
                 <tbody>
                   {items.map(i => (
                     <tr key={i.id}>
-                      <td style={{ fontWeight: 500 }}>{i.description}</td>
-                      <td>{i.hsnCode}</td>
-                      <td>{i.unit}</td>
-                      <td>{i.gstRate}%</td>
-                      <td>
+                      <td data-label="Description" style={{ fontWeight: 500 }}>{i.description}</td>
+                      <td data-label="HSN Code">{i.hsnCode}</td>
+                      <td data-label="Unit">{i.unit}</td>
+                      <td data-label="GST %">{i.gstRate}%</td>
+                      <td data-label="Action">
                         <button className="btn btn-icon btn-danger" onClick={() => handleDelete(i.id)}>
                           <Trash2 size={16} />
                         </button>

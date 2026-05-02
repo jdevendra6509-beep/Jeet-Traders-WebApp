@@ -149,7 +149,7 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
         </div>
         <div className="card-body">
           <div className="table-container">
-            <table className="table">
+            <table className="table responsive-table">
               <thead>
                 <tr>
                   <th style={{ width: '30%' }}>Item</th>
@@ -164,7 +164,7 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
               <tbody>
                 {data.items.map((item) => (
                   <tr key={item.id}>
-                    <td>
+                    <td data-label="Item">
                       <select className="form-control" value={itemsMaster.find(i => i.description === item.description)?.id || ''} onChange={(e) => handleItemMasterChange(item.id, e.target.value)}>
                         <option value="">-- Select --</option>
                         {itemsMaster.map(i => (
@@ -172,22 +172,22 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
                         ))}
                       </select>
                     </td>
-                    <td>
+                    <td data-label="HSN Code">
                       <input type="text" className="form-control" value={item.hsnCode} readOnly style={{ backgroundColor: 'var(--bg-color)' }} />
                     </td>
-                    <td>
+                    <td data-label="GST %">
                       <input type="text" className="form-control" value={item.gstRate + '%'} readOnly style={{ backgroundColor: 'var(--bg-color)' }} />
                     </td>
-                    <td>
+                    <td data-label="Qty">
                       <input type="number" className="form-control" value={item.qty} onChange={(e) => updateItem(item.id, 'qty', e.target.value === '' ? '' : parseFloat(e.target.value))} />
                     </td>
-                    <td>
+                    <td data-label="Unit">
                       <input type="text" className="form-control" value={item.unit} readOnly style={{ backgroundColor: 'var(--bg-color)' }} />
                     </td>
-                    <td>
+                    <td data-label="Rate (Inc. GST)">
                       <input type="number" className="form-control" value={item.inclusiveRate} onChange={(e) => updateItem(item.id, 'inclusiveRate', e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="Inclusive Rate" />
                     </td>
-                    <td>
+                    <td data-label="Action">
                       <button className="btn btn-danger btn-icon" onClick={() => removeItem(item.id)}>
                         <Trash2 size={16} />
                       </button>

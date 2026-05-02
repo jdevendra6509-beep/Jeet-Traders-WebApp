@@ -112,7 +112,7 @@ export function Customers() {
             <p style={{ padding: '1.5rem' }}>Loading...</p>
           ) : (
             <div className="table-container" style={{ margin: 0, border: 'none', borderRadius: 0 }}>
-              <table className="table">
+              <table className="table responsive-table">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -125,11 +125,11 @@ export function Customers() {
                 <tbody>
                   {customers.map(c => (
                     <tr key={c.id}>
-                      <td style={{ fontWeight: 500 }}>{c.name}</td>
-                      <td>{c.address}</td>
-                      <td>{c.state} ({c.stateCode})</td>
-                      <td>{c.gstin}</td>
-                      <td>
+                      <td data-label="Name" style={{ fontWeight: 500 }}>{c.name}</td>
+                      <td data-label="Address">{c.address}</td>
+                      <td data-label="State">{c.state} ({c.stateCode})</td>
+                      <td data-label="GSTIN">{c.gstin}</td>
+                      <td data-label="Action">
                         <button className="btn btn-icon btn-danger" onClick={() => handleDelete(c.id)}>
                           <Trash2 size={16} />
                         </button>
