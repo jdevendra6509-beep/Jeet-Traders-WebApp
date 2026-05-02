@@ -14,27 +14,28 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
   const printRef = useRef<HTMLDivElement>(null);
 
   // Math Logic (Inclusive to Exclusive)
-  const calculateTaxableRate = (inclusiveRate: number, gstRate: number) => {
-    return inclusiveRate / (1 + (gstRate / 100));
-  };
+  let subtotal = 0;
+  let gstAmount = 0;
+  
+  data.items.forEach(item => {
+    const incRate = Number(item.inclusiveRate) || 0;
+    const qty = Number(item.qty) || 0;
+    const taxableRate = incRate / (1 + (item.gstRate / 100));
+    const itemTaxableTotal = taxableRate * qty;
+    subtotal += itemTaxableTotal;
+    gstAmount += itemTaxableTotal * (item.gstRate / 100);
+  });
+  
+  const loading = Number(data.loadingCharges) || 0;
+  const transport = Number(data.transportCharges) || 0;
+  const other = Number(data.otherCharges) || 0;
+  const hamali = Number(data.hamali) || 0;
 
-  const calculateItemTaxableTotal = (item: any) => {
-    const taxableRate = calculateTaxableRate(item.inclusiveRate, item.gstRate);
-    return taxableRate * item.qty;
-  };
-
-  const subtotal = data.items.reduce((acc, item) => acc + calculateItemTaxableTotal(item), 0);
-  const taxableAmount = subtotal + data.loadingCharges + data.transportCharges + data.otherCharges;
-
-  const gstAmount = data.items.reduce((acc, item) => {
-    const itemTaxableTotal = calculateItemTaxableTotal(item);
-    return acc + (itemTaxableTotal * (item.gstRate / 100));
-  }, 0);
-
+  const taxableAmount = subtotal + loading + transport + other;
   const cgst = gstAmount / 2;
   const sgst = gstAmount / 2;
 
-  const invoiceTotal = taxableAmount + cgst + sgst + data.hamali;
+  const invoiceTotal = taxableAmount + cgst + sgst + hamali;
   const roundedTotal = Math.round(invoiceTotal);
   const totalInWords = numberToWords(roundedTotal) + ' Only';
 
@@ -194,23 +195,25 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
             </thead>
             <tbody>
               {data.items.map((item, index) => {
-                const taxableRate = calculateTaxableRate(item.inclusiveRate, item.gstRate);
-                const total = calculateItemTaxableTotal(item);
+                const incRate = Number(item.inclusiveRate) || 0;
+                const qty = Number(item.qty) || 0;
+                const taxableRate = incRate / (1 + (item.gstRate / 100));
+                const total = taxableRate * qty;
                 
                 return (
                   <tr key={item.id} style={{ borderBottom: 'none' }}>
                     <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none', height: '30px' }}>{index + 1}</td>
                     <td style={{ borderBottom: 'none', borderTop: 'none' }}>{item.description}</td>
                     <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{item.hsnCode}</td>
-                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{item.qty}</td>
+                    <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{qty}</td>
                     <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{item.unit}</td>
                     <td style={{ textAlign: 'center', borderBottom: 'none', borderTop: 'none' }}>{taxableRate.toFixed(2)}</td>
                     <td style={{ textAlign: 'right', borderBottom: 'none', borderTop: 'none' }}>{total.toFixed(2)}</td>
                     {index === 0 ? (
                       <>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{data.loadingCharges}</td>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{data.transportCharges}</td>
-                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{data.otherCharges}</td>
+                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{loading}</td>
+                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{transport}</td>
+                        <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'center', verticalAlign: 'top', paddingTop: '10px' }}>{other}</td>
                         <td rowSpan={Math.max(2, data.items.length)} style={{ textAlign: 'right', verticalAlign: 'top', paddingTop: '10px' }}>{taxableAmount.toFixed(2)}</td>
                       </>
                     ) : null}
@@ -220,7 +223,7 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
               <tr style={{ borderTop: '1px solid black' }}>
                 <td colSpan={3} style={{ borderRight: 'none' }}></td>
                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>
-                  {data.items.reduce((sum, item) => sum + item.qty, 0).toFixed(2)}
+                  {data.items.reduce((sum, item) => sum + (Number(item.qty) || 0), 0).toFixed(2)}
                 </td>
                 <td colSpan={7} style={{ borderLeft: 'none' }}></td>
               </tr>
@@ -254,7 +257,7 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
               </div>
               <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
                 <span style={{ fontWeight: 'bold' }}>HAMALI</span>
-                <span>{data.hamali.toFixed(2)}</span>
+                <span>{hamali.toFixed(2)}</span>
               </div>
               <div className="flex-row justify-between" style={{ padding: '4px', borderBottom: '1px solid black' }}>
                 <span style={{ fontWeight: 'bold' }}>Invoice Total</span>

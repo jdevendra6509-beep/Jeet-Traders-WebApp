@@ -90,6 +90,10 @@ export const getInvoiceByNo = async (invoiceNo: string): Promise<InvoiceData | u
   };
 };
 
+export const deleteInvoice = async (invoiceNo: string): Promise<void> => {
+  const { error } = await supabase.from('invoices').delete().eq('invoice_no', invoiceNo);
+  if (error) throw error;
+};
 export const getCustomers = async (): Promise<Customer[]> => {
   const { data, error } = await supabase.from('customers').select('*');
   if (error) {

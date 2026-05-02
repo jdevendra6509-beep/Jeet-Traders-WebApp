@@ -64,10 +64,10 @@ function NewInvoiceWrapper() {
     
     items: [],
     
-    loadingCharges: 0,
-    transportCharges: 0,
-    otherCharges: 0,
-    hamali: 0,
+    loadingCharges: '',
+    transportCharges: '',
+    otherCharges: '',
+    hamali: '',
   });
 
   const handleGenerate = async () => {

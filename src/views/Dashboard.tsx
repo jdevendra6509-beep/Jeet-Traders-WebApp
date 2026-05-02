@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getInvoices } from '../lib/storage';
+import { getInvoices, deleteInvoice } from '../lib/storage';
 import type { InvoiceData } from '../types';
-import { FileText, Plus } from 'lucide-react';
+import { FileText, Plus, Trash2, Download } from 'lucide-react';
 
 export function Dashboard() {
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
@@ -28,16 +28,35 @@ export function Dashboard() {
     let gst = 0;
     
     invoice.items.forEach(item => {
+      const incRate = Number(item.inclusiveRate) || 0;
+      const qty = Number(item.qty) || 0;
       // Inclusive rate logic: Taxable = Inclusive Rate / (1 + GST/100)
-      const taxableRate = item.inclusiveRate / (1 + (item.gstRate / 100));
-      const itemTaxableTotal = taxableRate * item.qty;
+      const taxableRate = incRate / (1 + (item.gstRate / 100));
+      const itemTaxableTotal = taxableRate * qty;
       subtotal += itemTaxableTotal;
       gst += itemTaxableTotal * (item.gstRate / 100);
     });
     
-    const taxableAmount = subtotal + invoice.loadingCharges + invoice.transportCharges + invoice.otherCharges;
-    const total = taxableAmount + gst + invoice.hamali;
+    const loading = Number(invoice.loadingCharges) || 0;
+    const transport = Number(invoice.transportCharges) || 0;
+    const other = Number(invoice.otherCharges) || 0;
+    const hamali = Number(invoice.hamali) || 0;
+
+    const taxableAmount = subtotal + loading + transport + other;
+    const total = taxableAmount + gst + hamali;
     return Math.round(total);
+  };
+
+  const handleDelete = async (invoiceNo: string) => {
+    if (confirm('Are you sure you want to delete this invoice? This action cannot be undone.')) {
+      try {
+        await deleteInvoice(invoiceNo);
+        setInvoices(invoices.filter(i => i.invoiceNo !== invoiceNo));
+      } catch (e) {
+        alert('Failed to delete invoice');
+        console.error(e);
+      }
+    }
   };
 
   return (
@@ -80,9 +99,14 @@ export function Dashboard() {
                       <td>{inv.receiverName}</td>
                       <td>₹ {calculateTotal(inv)}</td>
                       <td>
-                        <button className="btn btn-secondary" onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)}>
-                          View
-                        </button>
+                        <div className="flex gap-2">
+                          <button className="btn btn-secondary" onClick={() => navigate(`/preview/${encodeURIComponent(inv.invoiceNo)}`)} title="View & Download">
+                            <Download size={16} /> View
+                          </button>
+                          <button className="btn btn-danger btn-icon" onClick={() => handleDelete(inv.invoiceNo)} title="Delete Invoice">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

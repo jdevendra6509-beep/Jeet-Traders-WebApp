@@ -28,14 +28,21 @@ export function Reports() {
       let gst = 0;
       
       inv.items.forEach(item => {
-        const taxableRate = item.inclusiveRate / (1 + (item.gstRate / 100));
-        const itemTaxableTotal = taxableRate * item.qty;
+        const incRate = Number(item.inclusiveRate) || 0;
+        const qty = Number(item.qty) || 0;
+        const taxableRate = incRate / (1 + (item.gstRate / 100));
+        const itemTaxableTotal = taxableRate * qty;
         subtotal += itemTaxableTotal;
         gst += itemTaxableTotal * (item.gstRate / 100);
       });
       
-      const taxableAmount = subtotal + inv.loadingCharges + inv.transportCharges + inv.otherCharges;
-      const total = Math.round(taxableAmount + gst + inv.hamali);
+      const loading = Number(inv.loadingCharges) || 0;
+      const transport = Number(inv.transportCharges) || 0;
+      const other = Number(inv.otherCharges) || 0;
+      const hamali = Number(inv.hamali) || 0;
+
+      const taxableAmount = subtotal + loading + transport + other;
+      const total = Math.round(taxableAmount + gst + hamali);
 
       return {
         'Invoice No': inv.invoiceNo,

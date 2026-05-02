@@ -19,9 +19,9 @@ export interface InvoiceItem {
   id: string;
   description: string;
   hsnCode: string;
-  qty: number;
+  qty: number | '';
   unit: string;
-  inclusiveRate: number; // User inputs this
+  inclusiveRate: number | ''; // User inputs this
   gstRate: number; // Retrieved from master
 }
 
@@ -44,8 +44,8 @@ export interface InvoiceData {
   
   items: InvoiceItem[];
   
-  loadingCharges: number;
-  transportCharges: number;
-  otherCharges: number;
-  hamali: number;
+  loadingCharges: number | '';
+  transportCharges: number | '';
+  otherCharges: number | '';
+  hamali: number | '';
 }

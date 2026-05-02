@@ -58,9 +58,9 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
       id: uuidv4(),
       description: '',
       hsnCode: '',
-      qty: 1,
+      qty: '',
       unit: '',
-      inclusiveRate: 0,
+      inclusiveRate: '',
       gstRate: 0,
     };
     onChange({ ...data, items: [...data.items, newItem] });
@@ -179,13 +179,13 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
                       <input type="text" className="form-control" value={item.gstRate + '%'} readOnly style={{ backgroundColor: 'var(--bg-color)' }} />
                     </td>
                     <td>
-                      <input type="number" className="form-control" value={item.qty} onChange={(e) => updateItem(item.id, 'qty', parseFloat(e.target.value))} />
+                      <input type="number" className="form-control" value={item.qty} onChange={(e) => updateItem(item.id, 'qty', e.target.value === '' ? '' : parseFloat(e.target.value))} />
                     </td>
                     <td>
                       <input type="text" className="form-control" value={item.unit} readOnly style={{ backgroundColor: 'var(--bg-color)' }} />
                     </td>
                     <td>
-                      <input type="number" className="form-control" value={item.inclusiveRate} onChange={(e) => updateItem(item.id, 'inclusiveRate', parseFloat(e.target.value))} placeholder="Inclusive Rate" />
+                      <input type="number" className="form-control" value={item.inclusiveRate} onChange={(e) => updateItem(item.id, 'inclusiveRate', e.target.value === '' ? '' : parseFloat(e.target.value))} placeholder="Inclusive Rate" />
                     </td>
                     <td>
                       <button className="btn btn-danger btn-icon" onClick={() => removeItem(item.id)}>
@@ -207,7 +207,7 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
         <div className="card-body form-row">
           <div className="form-col">
             <label className="form-label">Hamali (Rs.)</label>
-            <input type="number" className="form-control" name="hamali" value={data.hamali} onChange={(e) => onChange({ ...data, hamali: parseFloat(e.target.value) || 0 })} />
+            <input type="number" className="form-control" name="hamali" value={data.hamali} onChange={(e) => onChange({ ...data, hamali: e.target.value === '' ? '' : parseFloat(e.target.value) })} />
           </div>
         </div>
       </div>
