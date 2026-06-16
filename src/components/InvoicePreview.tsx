@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import type { InvoiceData } from '../types';
 import { numberToWords } from '../lib/numberToWords';
 import { ArrowLeft, Printer, Share2, Download } from 'lucide-react';
@@ -12,6 +13,9 @@ interface InvoicePreviewProps {
 
 export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
   const printRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+  const autoShare = searchParams.get('share') === 'true';
+  const autoPrint = searchParams.get('print') === 'true';
 
   // Math Logic (Inclusive to Exclusive)
   let subtotal = 0;
@@ -104,14 +108,26 @@ export function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
 
   // Auto download on mount (Simulating user requirement "pdf will be downloaded and share will open immediately")
   useEffect(() => {
-    // Adding a slight delay to ensure fonts/css are loaded before drawing canvas
-    const timer = setTimeout(() => {
-      handleDownload().then(() => {
-        handleShare();
-      });
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (autoShare) {
+      // Adding a slight delay to ensure fonts/css are loaded before drawing canvas
+      const timer = setTimeout(() => {
+        handleDownload().then(() => {
+          handleShare();
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [autoShare]);
+
+  // Auto print on mount if requested
+  useEffect(() => {
+    if (autoPrint) {
+      const timer = setTimeout(() => {
+        window.print();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [autoPrint]);
 
   return (
     <div>

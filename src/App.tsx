@@ -6,9 +6,10 @@ import { Dashboard } from './views/Dashboard';
 import { Reports } from './views/Reports';
 import { Customers } from './views/Customers';
 import { Items } from './views/Items';
+import { Invoices } from './views/Invoices';
 import type { InvoiceData } from './types';
 import { saveInvoice, getInvoiceByNo } from './lib/storage';
-import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle, Users, Package } from 'lucide-react';
+import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle, Users, Package, FileText } from 'lucide-react';
 
 function Sidebar() {
   const location = useLocation();
@@ -24,6 +25,9 @@ function Sidebar() {
         <nav className="sidebar-nav">
           <Link to="/" className={`btn ${isActive('/') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/') ? '' : 'transparent' }}>
             <LayoutDashboard size={18} /> Dashboard
+          </Link>
+          <Link to="/invoices" className={`btn ${isActive('/invoices') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/invoices') ? '' : 'transparent' }}>
+            <FileText size={18} /> Invoices
           </Link>
           <Link to="/new" className={`btn ${isActive('/new') ? 'btn-primary' : 'btn-secondary'}`} style={{ justifyContent: 'flex-start', border: 'none', boxShadow: 'none', backgroundColor: isActive('/new') ? '' : 'transparent' }}>
             <PlusCircle size={18} /> New Invoice
@@ -45,16 +49,16 @@ function Sidebar() {
           <LayoutDashboard size={24} />
           <span>Home</span>
         </Link>
-        <Link to="/customers" className={`nav-item ${isActive('/customers') ? 'active' : ''}`}>
-          <Users size={24} />
-          <span>Clients</span>
+        <Link to="/invoices" className={`nav-item ${isActive('/invoices') ? 'active' : ''}`}>
+          <FileText size={24} />
+          <span>Invoices</span>
         </Link>
         <Link to="/new" className="nav-fab">
           <PlusCircle size={28} />
         </Link>
-        <Link to="/items" className={`nav-item ${isActive('/items') ? 'active' : ''}`}>
-          <Package size={24} />
-          <span>Items</span>
+        <Link to="/customers" className={`nav-item ${isActive('/customers') ? 'active' : ''}`}>
+          <Users size={24} />
+          <span>Clients</span>
         </Link>
         <Link to="/reports" className={`nav-item ${isActive('/reports') ? 'active' : ''}`}>
           <FileSpreadsheet size={24} />
@@ -97,7 +101,7 @@ function NewInvoiceWrapper() {
   const handleGenerate = async () => {
     try {
       await saveInvoice(invoiceData);
-      navigate(`/preview/${encodeURIComponent(invoiceData.invoiceNo)}`);
+      navigate(`/preview/${encodeURIComponent(invoiceData.invoiceNo)}?share=true`);
     } catch (e) {
       alert('Failed to save invoice. Please check your database connection.');
       console.error(e);
@@ -139,6 +143,62 @@ function PreviewWrapper() {
   return <InvoicePreview data={invoiceData} onEdit={() => navigate(-1)} />;
 }
 
+function EditInvoiceWrapper() {
+  const { invoiceNo } = useParams();
+  const navigate = useNavigate();
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    async function fetchInv() {
+      if (!invoiceNo) return;
+      try {
+        const data = await getInvoiceByNo(decodeURIComponent(invoiceNo));
+        if (data) {
+          setInvoiceData(data);
+        } else {
+          alert('Invoice not found');
+          navigate('/invoices');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Error loading invoice details');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInv();
+  }, [invoiceNo, navigate]);
+
+  const handleSave = async () => {
+    if (!invoiceData) return;
+    try {
+      await saveInvoice(invoiceData);
+      navigate(`/preview/${encodeURIComponent(invoiceData.invoiceNo)}`);
+    } catch (e) {
+      alert('Failed to save invoice. Please check your database connection.');
+      console.error(e);
+    }
+  };
+
+  if (loading) {
+    return <div className="card"><div className="card-body">Loading Invoice Details...</div></div>;
+  }
+
+  if (!invoiceData) {
+    return <div className="card"><div className="card-body">Invoice not found!</div></div>;
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <h2>Edit Invoice: {invoiceData.invoiceNo}</h2>
+      </div>
+      <InvoiceForm data={invoiceData} onChange={setInvoiceData} onGenerate={handleSave} isEdit={true} />
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -147,7 +207,9 @@ function App() {
         <main className="main-content" style={{ overflowY: 'auto' }}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/invoices" element={<Invoices />} />
             <Route path="/new" element={<NewInvoiceWrapper />} />
+            <Route path="/edit/:invoiceNo" element={<EditInvoiceWrapper />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/items" element={<Items />} />

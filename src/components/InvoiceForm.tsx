@@ -8,9 +8,10 @@ interface InvoiceFormProps {
   data: InvoiceData;
   onChange: (data: InvoiceData) => void;
   onGenerate: () => void;
+  isEdit?: boolean;
 }
 
-export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
+export function InvoiceForm({ data, onChange, onGenerate, isEdit = false }: InvoiceFormProps) {
   const [customers, setCustomers] = React.useState<Customer[]>([]);
   const [itemsMaster, setItemsMaster] = React.useState<MasterItem[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -131,7 +132,15 @@ export function InvoiceForm({ data, onChange, onGenerate }: InvoiceFormProps) {
           </div>
           <div className="form-col">
             <label className="form-label">Invoice No.</label>
-            <input type="text" className="form-control" name="invoiceNo" value={data.invoiceNo} onChange={handleChange} />
+            <input 
+              type="text" 
+              className="form-control" 
+              name="invoiceNo" 
+              value={data.invoiceNo} 
+              onChange={handleChange}
+              readOnly={isEdit}
+              style={isEdit ? { backgroundColor: 'var(--bg-color)', cursor: 'not-allowed' } : {}}
+            />
           </div>
           <div className="form-col">
             <label className="form-label">Date of Supply</label>

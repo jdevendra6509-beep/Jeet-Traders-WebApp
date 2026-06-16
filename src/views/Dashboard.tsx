@@ -124,7 +124,7 @@ export function Dashboard() {
           <div className="flex justify-between items-center mb-4">
             <h2 style={{ fontSize: '1.25rem' }}>Recent Invoices</h2>
             {invoices.length > 5 && (
-              <button className="btn btn-secondary" onClick={() => navigate('/reports')} style={{ border: 'none', color: 'var(--primary)', boxShadow: 'none', backgroundColor: 'transparent', padding: 0 }}>
+              <button className="btn btn-secondary" onClick={() => navigate('/invoices')} style={{ border: 'none', color: 'var(--primary)', boxShadow: 'none', backgroundColor: 'transparent', padding: 0 }}>
                 View All →
               </button>
             )}
