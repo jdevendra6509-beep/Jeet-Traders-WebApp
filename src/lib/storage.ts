@@ -106,14 +106,16 @@ export const getCustomers = async (): Promise<Customer[]> => {
     console.error('Error fetching customers:', error);
     return [];
   }
-  return data.map(row => ({
-    id: row.id,
-    name: row.name,
-    address: row.address,
-    state: row.state,
-    stateCode: row.state_code,
-    gstin: row.gstin
-  }));
+  return data
+    .map(row => ({
+      id: row.id,
+      name: row.name,
+      address: row.address,
+      state: row.state,
+      stateCode: row.state_code,
+      gstin: row.gstin
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
 };
 
 export const getMasterItems = async (): Promise<MasterItem[]> => {
