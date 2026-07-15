@@ -161,3 +161,32 @@ export const deleteMasterItem = async (id: string): Promise<void> => {
   const { error } = await supabase.from('items').delete().eq('id', id);
   if (error) throw error;
 };
+
+export const getNextInvoiceNo = async (): Promise<string> => {
+  const invoices = await getInvoices();
+  
+  // Calculate current financial year prefix (April 1st to March 31st)
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0 is Jan, 3 is Apr
+  const startYear = month < 3 ? year - 1 : year;
+  const startYearStr = startYear.toString().slice(-2);
+  const endYearStr = (startYear + 1).toString().slice(-2);
+  const prefix = `JT/${startYearStr}-${endYearStr}/`;
+
+  let maxNum = 0;
+  
+  invoices.forEach(inv => {
+    if (inv.invoiceNo && inv.invoiceNo.startsWith(prefix)) {
+      const parts = inv.invoiceNo.split('/');
+      const suffix = parts[parts.length - 1];
+      const num = parseInt(suffix, 10);
+      if (!isNaN(num) && num > maxNum) {
+        maxNum = num;
+      }
+    }
+  });
+
+  const nextNum = maxNum + 1;
+  return `${prefix}${nextNum.toString().padStart(3, '0')}`;
+};

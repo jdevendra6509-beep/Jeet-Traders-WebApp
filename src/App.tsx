@@ -8,7 +8,7 @@ import { Customers } from './views/Customers';
 import { Items } from './views/Items';
 import { Invoices } from './views/Invoices';
 import type { InvoiceData } from './types';
-import { saveInvoice, getInvoiceByNo } from './lib/storage';
+import { saveInvoice, getInvoiceByNo, getNextInvoiceNo } from './lib/storage';
 import { Receipt, LayoutDashboard, FileSpreadsheet, PlusCircle, Users, Package, FileText } from 'lucide-react';
 
 function Sidebar() {
@@ -72,9 +72,10 @@ function Sidebar() {
 function NewInvoiceWrapper() {
   const navigate = useNavigate();
   const formattedToday = `${new Date().getDate().toString().padStart(2, '0')}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getFullYear()}`;
+  const [loading, setLoading] = useState(true);
 
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
-    invoiceNo: `JT/${new Date().getFullYear().toString().slice(-2)}-${(new Date().getFullYear() + 1).toString().slice(-2)}/${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+    invoiceNo: '',
     dateOfSupply: formattedToday,
     poNo: '',
     poDate: '',
@@ -98,6 +99,20 @@ function NewInvoiceWrapper() {
     hamali: '',
   });
 
+  React.useEffect(() => {
+    async function loadNextInvoiceNo() {
+      try {
+        const nextNo = await getNextInvoiceNo();
+        setInvoiceData(prev => ({ ...prev, invoiceNo: nextNo }));
+      } catch (e) {
+        console.error('Error fetching next invoice number:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadNextInvoiceNo();
+  }, []);
+
   const handleGenerate = async () => {
     try {
       await saveInvoice(invoiceData);
@@ -107,6 +122,10 @@ function NewInvoiceWrapper() {
       console.error(e);
     }
   };
+
+  if (loading) {
+    return <div className="card"><div className="card-body">Generating Invoice Number...</div></div>;
+  }
 
   return <InvoiceForm data={invoiceData} onChange={setInvoiceData} onGenerate={handleGenerate} />;
 }
