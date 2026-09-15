@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Amplify
+amplify_outputs*
+.amplify
+
+# One-time Supabase -> AWS data migration exports (contains real customer data)
+migration-data/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
